@@ -49,3 +49,8 @@ body {
     margin-left: 20px;
   }
   
+
+  .active>button {
+      font-weight: bold;
+      color: red;
+  }
