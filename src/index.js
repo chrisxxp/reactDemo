@@ -23,9 +23,21 @@ class Board extends React.Component {
     }
 
     render() {
+        const x= ['','','']
+        const y= ['','','']
         return (
             <div>
-                <div className="board-row">
+                {x.map((item, index) => {
+                    return (
+                    <div className="board-row">
+                        {
+                            y.map((item2, index2) => {
+                                return this.renderSquare(3*index + index2)
+                            })
+                        }
+                    </div>)
+                })}
+                {/* <div className="board-row">
                     {this.renderSquare(0)}
                     {this.renderSquare(1)}
                     {this.renderSquare(2)}
@@ -39,7 +51,7 @@ class Board extends React.Component {
                     {this.renderSquare(6)}
                     {this.renderSquare(7)}
                     {this.renderSquare(8)}
-                </div>
+                </div> */}
             </div>
         );
     }
