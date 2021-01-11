@@ -2,26 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// class Square extends React.Component {
-//     constructor(props) {
-//         super(props)
-//         this.state = {
-//             value: null
-//         }
-//     }
-
-//     render() {
-//       return (
-//         <button 
-//             className="square" 
-//             onClick={() => {this.props.onClick()}}
-//         >
-//           {this.props.value}
-//         </button>
-//       );
-//     }
-//   }
-
 function Square(props) {
     return (
         <button
@@ -76,6 +56,7 @@ class Game extends React.Component {
             history: [
                 {
                     squares: Array(9).fill(null),
+                    coord: ''
                 }
             ]
         }
@@ -89,11 +70,11 @@ class Game extends React.Component {
             return
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O'
-
         this.setState({
             xIsNext: !this.state.xIsNext,
             history: history.concat([{
-                squares: squares
+                squares: squares,
+                coord: getCoords(i)
             }]),
             stepNumber: history.length
         })
@@ -112,7 +93,7 @@ class Game extends React.Component {
         const winner = calculateWinner(current.squares)
         const moves = history.map((step, move) => {
             const desc = move ? 
-            'Go to move #' + move :
+            'Go to move #' + move  + ' 坐标为：' + step.coord :
             'Go to game start';
 
             return (
@@ -144,6 +125,28 @@ class Game extends React.Component {
             </div>
         );
     }
+}
+
+/**
+ * 获取当前点击的坐标
+ * @param {当前index} index 
+ */
+function getCoords(index) {
+    index = index + 1
+    const y = index%3 === 0 ? '3' : index%3
+    let x = 0
+    const xArr = [
+        [1,2,3],
+        [4,5,6],
+        [7,8,9]
+    ]
+    xArr.forEach((item, k) => {
+        if (item.indexOf(index) > -1) {
+            x = k+1
+        }
+    })
+
+    return `${x}, ${y}`
 }
 
 function calculateWinner(squares) {
