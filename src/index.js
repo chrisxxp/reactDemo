@@ -69,7 +69,8 @@ class Game extends React.Component {
                     squares: Array(9).fill(null),
                     coord: ''
                 }
-            ]
+            ],
+            inUni: true
         }
     }
 
@@ -98,18 +99,26 @@ class Game extends React.Component {
         })
     }
 
+    handleSequence() {
+        this.setState({
+            inUni: !this.state.inUni
+        })
+    }
+
     render() {
         const history = this.state.history
         const current = history[this.state.stepNumber]
         const winner = calculateWinner(current.squares)
         const moves = history.map((step, move) => {
+            if (!this.state.inUni) move = history.length - 1 - move
+            
             const desc = move ? 
             'Go to move #' + move  + ' 坐标为：' + step.coord :
             'Go to game start';
 
             return (
                 <li key={move} className={this.state.stepNumber === move ? 'active' : '' }>
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    {move+1 + '. '}<button onClick={() => this.jumpTo(move)}>{desc}</button>
                 </li>
             )
         })
@@ -132,6 +141,7 @@ class Game extends React.Component {
                 <div className="game-info">
                     <div>{status}</div>
                     <ol>{moves}</ol>
+                    <button onClick={() => {this.handleSequence()}}>调整顺序</button>
                 </div>
             </div>
         );
