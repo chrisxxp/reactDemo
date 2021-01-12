@@ -4,7 +4,7 @@ import './index.css';
 function Square(props) {
     return (
         <button
-            className="square"
+            className={props.active? 'square active':'square'}
             onClick={props.onClick}
         >
             {props.value}
@@ -16,6 +16,7 @@ class Board extends React.Component {
     renderSquare(i) {
         return (
             <Square
+                active={this.props.winnerLineArr.indexOf(i) > -1}
                 value={this.props.squares[i]}
                 onClick={() => { this.props.onClick(i) }}
             />
@@ -70,15 +71,36 @@ class Game extends React.Component {
                     coord: ''
                 }
             ],
-            inUni: true
+            inUni: true,
+            winnerLineArr: []
         }
+    }
+
+    /**
+     * 每当有人获胜时，高亮显示连成一线的 3 颗棋子。
+     */
+    showHeightLine(lineArr) {
+        if (this.state.winnerLineArr.length > 0) return
+        this.setState({
+            winnerLineArr: lineArr
+        })
+    }
+
+    /**
+     * 添加一个可以升序或降序显示历史记录的按钮。
+     */
+    handleSequence() {
+        this.setState({
+            inUni: !this.state.inUni
+        })
     }
 
     handleClick(i) {
         const history = this.state.history.slice(0, this.state.stepNumber+1);
         const current = history[history.length-1]
         const squares = current.squares.slice()
-        if (calculateWinner(squares) || squares[i]) {
+        const winner = calculateWinner(squares)
+        if (winner || squares[i]) {
             return
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O'
@@ -90,18 +112,21 @@ class Game extends React.Component {
             }]),
             stepNumber: history.length
         })
+
+        const winner2 = calculateWinner(squares)
+        if (winner2) {
+            this.showHeightLine(winner2.line)
+        }
     }
 
     jumpTo(step) {
+        const current = this.state.history[step]
+        const squares = current.squares.slice()
+        const winner = calculateWinner(squares)
         this.setState({
             xIsNext: (step % 2) === 0,
-            stepNumber: step
-        })
-    }
-
-    handleSequence() {
-        this.setState({
-            inUni: !this.state.inUni
+            stepNumber: step,
+            winnerLineArr: winner ? winner.line : []
         })
     }
 
@@ -125,7 +150,7 @@ class Game extends React.Component {
 
         let status;
         if (winner) {
-            status = 'Winner: ' + winner
+            status = 'Winner: ' + winner.name
         } else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
@@ -134,6 +159,7 @@ class Game extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <Board 
+                        winnerLineArr={this.state.winnerLineArr}
                         squares={current.squares}
                         onClick={(i) => this.handleClick(i)}
                     />
@@ -184,7 +210,10 @@ function calculateWinner(squares) {
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
+            return {
+                name: squares[a],
+                line: [a, b, c]
+            };
         }
     }
     return null;
