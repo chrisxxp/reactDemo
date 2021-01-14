@@ -1,0 +1,19 @@
+h1 {
+    color: red;
+}
+
+h3 {
+    margin: 5px 0;
+}
+
+.product-row {
+    display: flex;
+}
+
+.product-row span {
+    width: 100px;
+}
+
+.search-bar-wrapper {
+    margin-bottom: 10px;
+}

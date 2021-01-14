@@ -1,6 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import FilterableProductTable from './components/FilterableProductTable/FilterableProductTable.js'
+
+
+
+// 数据源
+const productTableJson = [
+    { category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football" },
+    { category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball" },
+    { category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball" },
+    { category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch" },
+    { category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5" },
+    { category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7" }
+];
+
 function Square(props) {
     return (
         <button
@@ -16,6 +30,7 @@ class Board extends React.Component {
     renderSquare(i) {
         return (
             <Square
+                key={i}
                 active={this.props.winnerLineArr.indexOf(i) > -1}
                 value={this.props.squares[i]}
                 onClick={() => { this.props.onClick(i) }}
@@ -30,7 +45,7 @@ class Board extends React.Component {
             <div>
                 {x.map((item, index) => {
                     return (
-                    <div className="board-row">
+                    <div className="board-row" key={index}>
                         {
                             y.map((item2, index2) => {
                                 return this.renderSquare(3*index + index2)
@@ -175,6 +190,7 @@ class Game extends React.Component {
                     <ol>{moves}</ol>
                     <button onClick={() => {this.handleSequence()}}>调整顺序</button>
                 </div>
+                <FilterableProductTable productTableJson={productTableJson}/>
             </div>
         );
     }
