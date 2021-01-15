@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import FilterableProductTable from './components/FilterableProductTable/FilterableProductTable.js'
+// import FilterableProductTable from './components/FilterableProductTable/FilterableProductTable.js'
+
+const FilterableProductTable = React.lazy(() => import('./components/FilterableProductTable/FilterableProductTable.js'))
 
 
 
@@ -190,7 +192,9 @@ class Game extends React.Component {
                     <ol>{moves}</ol>
                     <button onClick={() => {this.handleSequence()}}>调整顺序</button>
                 </div>
-                <FilterableProductTable productTableJson={productTableJson}/>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <FilterableProductTable productTableJson={productTableJson}/>
+                </Suspense>
             </div>
         );
     }
