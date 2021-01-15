@@ -1,11 +1,13 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import Game from './components/GobangGame/GobangGame.js'
+import ContextDemo from './components/ContextDemo/ContextDemo.js'
 import './index.css';
 // import FilterableProductTable from './components/FilterableProductTable/FilterableProductTable.js'
 
 /**
  * react.lazy 一般搭配路由使用
+ * 结合Suspense 实现loading...
  */
 const FilterableProductTable = React.lazy(() => import('./components/FilterableProductTable/FilterableProductTable.js'))
 
@@ -32,6 +34,7 @@ function Index(props) {
             <Suspense fallback={<div>Loading...</div>}>
                 <FilterableProductTable productTableJson={productTableJson}/>
             </Suspense>
+            <ContextDemo/>
         </div>
     )
 }
